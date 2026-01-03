@@ -206,3 +206,13 @@
 2026-01-03 11:06:32 - Accessed: services - list
 2026-01-03 11:07:08 - Accessed: services - create
 2026-01-03 11:07:59 - Accessed: poste - list
+2026-01-03 15:31:10 - Accessed: auth - login
+2026-01-03 15:32:22 - Accessed: directions - list
+2026-01-03 15:32:31 - Accessed: personnel - list
+2026-01-03 15:32:32 - Accessed: poste - list
+2026-01-03 15:32:34 - Accessed: services - list
+2026-01-03 15:32:35 - Accessed: directions - list
+2026-01-03 15:34:50 - Accessed: auth - login
+2026-01-03 15:34:59 - Accessed: auth - login
+2026-01-03 15:35:01 - Accessed: auth - register
+2026-01-03 15:35:05 - Accessed: auth - login
