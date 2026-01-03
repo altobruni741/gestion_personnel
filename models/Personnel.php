@@ -53,11 +53,22 @@ class Personnel {
         
         // Recherche par nom ou prénom
         if (!empty($filters['search'])) {
-            $query .= ' AND (p.firstname LIKE ? OR p.lastname LIKE ? OR p.email LIKE ?)';
+            $searchClause = 'p.firstname LIKE ? OR p.lastname LIKE ? OR p.email LIKE ? OR p.position LIKE ? OR CONCAT(p.firstname, " ", p.lastname) LIKE ? OR CONCAT(p.lastname, " ", p.firstname) LIKE ?';
+            if ($check_postes) {
+                $searchClause .= ' OR po.name LIKE ?';
+            }
+            $query .= ' AND (' . $searchClause . ')';
+            
             $search = '%' . $filters['search'] . '%';
             $params[] = $search;
             $params[] = $search;
             $params[] = $search;
+            $params[] = $search; // For p.position
+            $params[] = $search; // For CONCAT(firstname, ' ', lastname)
+            $params[] = $search; // For CONCAT(lastname, ' ', firstname)
+            if ($check_postes) {
+                $params[] = $search; // For po.name
+            }
         }
         
         $query .= ' ORDER BY d.name, s.name' . ($check_postes ? ', po.name' : '') . ', p.lastname, p.firstname';
