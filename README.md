@@ -15,16 +15,18 @@ Une application web complète et professionnelle pour gérer votre personnel, vo
 ### 👥 Gestion Complète du Personnel
 - **Champs détaillés**: Prénom, nom, email, téléphone, poste, statut
 - **Informations d'emploi**: Date d'embauche, salaire, notes
+- **Gestion des Contrats**: Durée de contrat et calcul automatique de la date de fin
+- **Alertes Expiration**: Notifications visuelles pour les contrats expirant bientôt
 - **Statuts variés**: Actif, Inactif, En Congé, Retraité
 - **Organisation**: Association à un poste, service et direction
 - **Historique**: Timestamps de création et modification
 
 ### 🔍 Recherche et Filtrage Avancé
-- **Recherche multi-champs**: Nom, prénom, email, position
+- **Recherche intelligente**: Par nom, prénom, email, poste (nom ou position)
+- **Support Nom Complet**: Recherche possible par "Prénom Nom" ou "Nom Prénom"
 - **Filtres par hiérarchie**: Direction → Service → Poste
 - **Filtres par statut**: Actif, Inactif, En Congé, Retraité
 - **Combinaison de filtres**: Tous les filtres fonctionnent ensemble
-- **Recherche en temps réel**: Résultats instantanés
 
 ### 📊 Statistiques et Rapports
 - **Statistiques par poste**: Effectifs, statuts, taux d'occupation
@@ -84,15 +86,16 @@ personnel (
   - email, phone (contact)
   - position, status (emploi)
   - hire_date, salary (rémunération)
+  - contract_duration, contract_end (contrat)
   - notes (remarques)
-  - service_id, direction_id (organisation)
+  - service_id, direction_id, poste_id (organisation)
   - created_at, updated_at (suivi)
 )
 ```
 
 ### Fonctionnalités de Recherche
-- Recherche globale (nom, email, position)
-- Filtres: statut, direction, service
+- Recherche globale (nom, prénom, nom complet, email, poste/position)
+- Filtres: statut, direction, service, poste
 - Combinaison de filtres
 - Réinitialisation facile
 
