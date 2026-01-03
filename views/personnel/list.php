@@ -141,8 +141,22 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
-          <?php foreach($personnel as $p): ?>
-            <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+          <?php 
+          $foundFirstExpiring = false;
+          foreach($personnel as $p): 
+            $isExpiring = false;
+            if (!empty($p['contract_end'])) {
+                $days = (int) ceil((strtotime($p['contract_end']) - time()) / 86400);
+                if ($days >= 0 && $days <= 10) $isExpiring = true;
+            }
+            $rowId = "";
+            if ($isExpiring && !$foundFirstExpiring) {
+                $rowId = 'id="expiring"';
+                $foundFirstExpiring = true;
+            }
+            $rowClass = $isExpiring ? 'bg-yellow-50/30 dark:bg-yellow-900/10' : '';
+          ?>
+            <tr <?= $rowId ?> class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors <?= $rowClass ?> scroll-mt-24">
               <td class="px-6 py-4">
                 <div>
                   <p class="text-sm font-bold text-slate-900 dark:text-white"><?=h($p['firstname'])?> <?=h($p['lastname'])?>
