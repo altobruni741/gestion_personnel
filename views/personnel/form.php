@@ -4,7 +4,7 @@
   <div class="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8">
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-slate-900 dark:text-white">
-        <?= isset($person) ? '✏️ Modifier un employé' : '➕ Ajouter un employé' ?>
+        <?= !empty($person['id']) ? '✏️ Modifier un employé' : '➕ Ajouter un employé' ?>
       </h1>
       <p class="text-slate-600 dark:text-slate-400 mt-2">Complétez le formulaire ci-dessous</p>
     </div>
@@ -134,7 +134,7 @@
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
           </svg>
-          <?= isset($person) ? 'Mettre à jour' : 'Créer' ?>
+          <?= !empty($person['id']) ? 'Mettre à jour' : 'Créer' ?>
         </button>
         <a href="index.php?page=personnel" class="px-6 py-3 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600 text-slate-900 dark:text-white font-medium rounded-lg transition-colors">
           Annuler
@@ -162,16 +162,16 @@
       const allOptions = Array.from(svcSelect.querySelectorAll('option'));
       allOptions.forEach(opt => {
         if (opt.value === '') {
-          opt.style.display = '';
+          opt.hidden = false;
         } else {
           const svcDir = opt.getAttribute('data-direction');
-          opt.style.display = (!dirId || svcDir == dirId) ? '' : 'none';
+          opt.hidden = !(!dirId || svcDir == dirId);
         }
       });
       
       // Clear service if it's now hidden
       const currentOpt = svcSelect.querySelector(`option[value="${svcSelect.value}"]`);
-      if (currentOpt && currentOpt.style.display === 'none') {
+      if (currentOpt && currentOpt.hidden) {
         svcSelect.value = '';
       }
       

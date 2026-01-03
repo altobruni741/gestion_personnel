@@ -68,23 +68,28 @@ if ($action === 'list') {
         } elseif (!empty($_POST['phone']) && !preg_match('/^[\d\s\-\+\(\)]+$/', $_POST['phone'])) {
             $error = 'Le numéro de téléphone n\'est pas valide.';
         } else {
-            // Auto-sync direction à partir du service sélectionné
-            if (!empty($_POST['service_id'])) {
+            // 1. Priorité au Poste : Si un poste est sélectionné, il détermine le Service et la Direction
+            if (!empty($_POST['poste_id'])) {
+                $poste = $posteModel->find($_POST['poste_id']);
+                if ($poste) {
+                    $_POST['service_id'] = $poste['service_id'];
+                    // Le modèle Poste::find retourne déjà direction_id via le join avec services
+                    // Mais on peut aussi le récupérer proprement via le Service si besoin
+                    // Ici $poste contient 'service_name' et 'direction_id' (si jointure faite dans find)
+                    
+                    // Vérifions si direction_id est dans $poste (méthode find du modèle Poste)
+                    // Le modèle Poste::find fait : LEFT JOIN directions d ON s.direction_id = d.id
+                    // Il retourne s.direction_id.
+                    if (isset($poste['direction_id'])) {
+                         $_POST['direction_id'] = $poste['direction_id'];
+                    }
+                }
+            } 
+            // 2. Si pas de poste, on regarde le Service
+            elseif (!empty($_POST['service_id'])) {
                 $service = $svcModel->find($_POST['service_id']);
                 if ($service) {
                     $_POST['direction_id'] = $service['direction_id'];
-                }
-            }
-            
-            // Valider que le poste appartient au service si les deux sont spécifiés
-            if (!empty($_POST['poste_id']) && !empty($_POST['service_id'])) {
-                try {
-                    $posteLookup = $posteModel->find($_POST['poste_id']);
-                    if ($posteLookup && $posteLookup['service_id'] != $_POST['service_id']) {
-                        $error = 'Le poste sélectionné n\'appartient pas au service sélectionné.';
-                    }
-                } catch (Exception $e) {
-                    // Postes table may not exist, ignore
                 }
             }
             
@@ -121,23 +126,21 @@ if ($action === 'list') {
         } elseif (!empty($_POST['email']) && !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
             $error = 'Veuillez entrer une adresse email valide.';
         } else {
-            // Auto-sync direction à partir du service sélectionné
-            if (!empty($_POST['service_id'])) {
+            // 1. Priorité au Poste : Si un poste est sélectionné, il détermine le Service et la Direction
+            if (!empty($_POST['poste_id'])) {
+                $poste = $posteModel->find($_POST['poste_id']);
+                if ($poste) {
+                    $_POST['service_id'] = $poste['service_id'];
+                    if (isset($poste['direction_id'])) {
+                         $_POST['direction_id'] = $poste['direction_id'];
+                    }
+                }
+            } 
+            // 2. Si pas de poste, on regarde le Service
+            elseif (!empty($_POST['service_id'])) {
                 $service = $svcModel->find($_POST['service_id']);
                 if ($service) {
                     $_POST['direction_id'] = $service['direction_id'];
-                }
-            }
-            
-            // Valider que le poste appartient au service si les deux sont spécifiés
-            if (!empty($_POST['poste_id']) && !empty($_POST['service_id'])) {
-                try {
-                    $posteLookup = $posteModel->find($_POST['poste_id']);
-                    if ($posteLookup && $posteLookup['service_id'] != $_POST['service_id']) {
-                        $error = 'Le poste sélectionné n\'appartient pas au service sélectionné.';
-                    }
-                } catch (Exception $e) {
-                    // Postes table may not exist, ignore
                 }
             }
             

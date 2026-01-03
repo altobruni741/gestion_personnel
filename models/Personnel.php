@@ -71,7 +71,17 @@ class Personnel {
      * Récupère un employé par ID
      */
     public function find($id) {
-        $stmt = $this->pdo->prepare('SELECT * FROM personnel WHERE id = ?');
+        $check_postes = $this->tableExists('postes');
+        
+        $query = 'SELECT p.*, s.name as service_name, d.name as direction_name' . 
+                 ($check_postes ? ', po.name as poste_name' : '') . '
+                  FROM personnel p 
+                  LEFT JOIN services s ON p.service_id = s.id 
+                  LEFT JOIN directions d ON p.direction_id = d.id' .
+                 ($check_postes ? ' LEFT JOIN postes po ON p.poste_id = po.id' : '') . '
+                  WHERE p.id = ?';
+                  
+        $stmt = $this->pdo->prepare($query);
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
@@ -110,8 +120,14 @@ class Personnel {
         $sql = 'INSERT INTO personnel (' . implode(',', $cols) . ') VALUES (' . implode(',', $placeholders) . ')';
         $stmt = $this->pdo->prepare($sql);
         
-        if ($stmt->execute($params)) {
-            return $this->pdo->lastInsertId();
+        try {
+            if ($stmt->execute($params)) {
+                return $this->pdo->lastInsertId();
+            }
+        } catch (PDOException $e) {
+            error_log("DB Insert Error: " . $e->getMessage());
+            // Fallback for debugging (this will be visible in php error log)
+            file_put_contents(__DIR__ . '/../logs/db_error.log', date('Y-m-d H:i:s') . " - " . $e->getMessage() . "\n", FILE_APPEND);
         }
         return false;
     }

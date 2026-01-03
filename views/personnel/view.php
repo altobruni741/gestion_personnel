@@ -15,7 +15,7 @@
         <h1 class="text-3xl font-bold text-slate-900 dark:text-white"><?=h($person['firstname'] . ' ' . $person['lastname'])?></h1>
         <div class="flex flex-wrap gap-2 mt-3">
           <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
-            <?=h($person['position'] ?? 'Sans poste')?>
+            <?=h($person['poste_name'] ?? ($person['position'] ?: 'Sans poste'))?>
           </span>
           <?php
             $statusClass = $person['status'] === 'Actif' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' : 
